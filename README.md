@@ -1,8 +1,5 @@
-# Loosely
-
+# Loosely🌱
 Text loosely based on input
-
----
 
 ## Install
 
