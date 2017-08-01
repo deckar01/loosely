@@ -15,10 +15,11 @@ npm install --save loosely
 ```js
 import Loosely from 'loosely';
 
-const input = '1-800-555-1234';
 const mask = Loosely.Mask(/\d \(\d{3}\) \d{3}-\d{4}/);
-const output = mask.filter(input);
+
+const text = mask.filter('1-800-555-1234');
 // 1 (800) 555-1234
-mask.validate(output);
+
+mask.validate(text);
 // true
 ```
