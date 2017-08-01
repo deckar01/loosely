@@ -1,0 +1,37 @@
+{
+  "name": "loosely",
+  "version": "0.0.1",
+  "description": "Text loosely based on input",
+  "main": "bin/loosely.js",
+  "scripts": {
+    "test": "jasmine",
+    "lint": "eslint ./*.js src",
+    "delint": "eslint --fix ./*.js src",
+    "rollup:node": "rollup -f cjs index.js -o bin/loosely.js",
+    "rollup:es6": "rollup index.js -o dist/loosely.js",
+    "rollup": "npm run rollup:node && npm run rollup:es6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deckar01/loosely.git"
+  },
+  "keywords": [
+    "input",
+    "mask",
+    "restrict",
+    "text",
+    "regex"
+  ],
+  "author": "Jared Deckard <jared.deckard@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deckar01/loosely/issues"
+  },
+  "homepage": "https://github.com/deckar01/loosely#readme",
+  "devDependencies": {
+    "eslint": "^3.11.1",
+    "eslint-config-airbnb-base": "^11.3.1",
+    "eslint-plugin-import": "^2.7.0",
+    "rollup": "^0.36.4"
+  }
+}
