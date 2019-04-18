@@ -7,9 +7,7 @@
     "test": "jasmine",
     "lint": "eslint ./*.js src",
     "delint": "eslint --fix ./*.js src",
-    "rollup:node": "rollup -f cjs index.js -o bin/loosely.js",
-    "rollup:es6": "rollup index.js -o dist/loosely.js",
-    "rollup": "npm run rollup:node && npm run rollup:es6"
+    "build": "pack build"
   },
   "repository": {
     "type": "git",
@@ -29,9 +27,31 @@
   },
   "homepage": "https://github.com/deckar01/loosely#readme",
   "devDependencies": {
+    "@pika/pack": "^0.3.1",
+    "@pika/plugin-build-node": "^0.3.9",
+    "@pika/plugin-build-web": "^0.3.9",
+    "@pika/plugin-standard-pkg": "^0.3.9",
     "eslint": "^3.11.1",
     "eslint-config-airbnb-base": "^11.3.1",
-    "eslint-plugin-import": "^2.7.0",
-    "rollup": "^0.36.4"
+    "eslint-plugin-import": "^2.7.0"
+  },
+  "@pika/pack": {
+    "pipeline": [
+      [
+        "@pika/plugin-standard-pkg"
+      ],
+      [
+        "@pika/plugin-standard-pkg"
+      ],
+      [
+        "@pika/plugin-build-node"
+      ],
+      [
+        "@pika/plugin-build-web"
+      ]
+    ]
+  },
+  "dependencies": {
+    "yarn": "^1.13.0"
   }
 }
