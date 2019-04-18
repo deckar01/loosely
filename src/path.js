@@ -24,14 +24,18 @@ export default class Path {
   find(character) {
     const results = [];
     let paths = [this];
+    const history = {};
     // Search until thre are no more paths left.
     while (paths.length) {
+      // Only try recursive paths once.
+      paths = paths.filter(path => !history[path.node.id]);
+      paths.forEach(path => history[path.node.id] = true);
       paths = paths.map((path) => {
         // Find the nodes that this character leads to.
         const nextPaths = path.node.find(character)
         .map(({ node, value, score }) => new Path(node, path.value + value, path.score + score));
         // If the path didn't have any where to go, add the path to the results.
-        if (nextPaths.length === 0) results.push(path);
+        if (nextPaths.length === 0 && path.score > this.score) results.push(path);
         return nextPaths;
       });
       paths = flatten(paths);
@@ -40,7 +44,17 @@ export default class Path {
       // If alternate characters were found, continue searching those paths.
       paths = paths.filter(({ score }) => score === this.score);
     }
-    return results;
+    return results.length ? results : [this];
+  }
+
+  /**
+   * Get a random path that this path leads to.
+   * @returns {Path} - The path.
+   */
+  sample() {
+    const path = this.node.sample();
+    if (path === null) return null;
+    return new Path(path.node, this.value + path.value, this.score + path.score);
   }
 
   /**

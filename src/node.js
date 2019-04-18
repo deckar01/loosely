@@ -1,5 +1,7 @@
 import Path from './path';
-import { flatten } from './utils';
+import { flatten, sample } from './utils';
+
+let COUNTER = 0;
 
 /**
  * A node of tokens in a graph. Tokens represent a single characters or
@@ -12,6 +14,7 @@ export default class Node {
    * @param {Node} parent - The parent node of this node.
    */
   constructor(token, parent) {
+    this.id = COUNTER++;
     this.token = token;
     this.parent = parent;
     this.children = [];
@@ -37,6 +40,38 @@ export default class Node {
   }
 
   /**
+   * Clone the node and its child.
+   * @return {Node} - The clone.
+   */
+  clone() {
+      const clone = new Node(this.token, this.parent);
+      clone.children = this.children.map(child => child.clone());
+      clone.id = `${this.id}.${clone.id}`;
+      return clone;
+  }
+
+  /**
+   * Add this node to any nodes that don't have children.
+   * @return {Node} - The node to terminate other nodes to.
+   */
+ terminate(node, history = {}) {
+     if (history[this.id]) {
+         this.add(node);
+         return;
+     }
+     history[this.id] = true;
+     if (this.children.length) this.children.forEach(child => child.terminate(node, history));
+     else this.add(node);
+ }
+
+end(history = {}) {
+   if (history[this.id]) return this;
+   history[this.id] = true;
+   if (this.children.length) return this.children[0].end(history);
+   else return this;
+}
+
+  /**
    * Find paths to nodes that matches the given character.
    * @param {String} character - The character to match tokens against.
    * @returns {Path[]} - The paths that the character matches.
@@ -53,5 +88,30 @@ export default class Node {
       return null;
     });
     return flatten(paths).filter(path => path);
+  }
+
+  trace(history = {}, level = '|   ') {
+      const id = this.token ? `${this.token.id} ${this.id}` : `<group ${this.id}>`;
+      history[this.id] = true;
+      const traces = this.children.map(child => {
+          if (history[child.id]) return `${level}|\n${level}|---<${child.id}>\n`;
+          else return child.trace(history, level + '|   ');
+      });
+      return `${level}\n${level.slice(0,-3)}---${id}\n${traces.join('')}`;
+  }
+
+  /**
+   * Find a random path that this node leads to.
+   * @returns {Path} - The path.
+   */
+  sample() {
+    const paths = this.children.map((child) => {
+      // Pass through nodes with no token.
+      if (!child.token) return child.sample();
+      // Use a random character that matches the token.
+      return new Path(child, child.token.sample(), 1);
+    });
+    if (paths.length === 0) return null;
+    return sample(paths);
   }
 }

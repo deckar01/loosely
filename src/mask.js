@@ -34,4 +34,13 @@ export default class Mask {
     const bestPath = max(paths, Path.compare);
     return bestPath.value;
   }
+
+  /**
+   * Generate text that satisfies the mask.
+   * @returns {String} - The text.
+   */
+  sample() {
+    const path = this.graph.sample();
+    return path.value;
+  }
 }

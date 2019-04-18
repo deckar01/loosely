@@ -26,3 +26,13 @@ export function maskToRegex(mask) {
   if (source[source.length - 1] !== '$') source = `${source}$`;
   return new RegExp(source);
 }
+
+export function sample(set) {
+  const index = Math.floor(Math.random() * Math.floor(set.length));
+  return set[index];
+}
+
+export const ASCII = ['\t', '\n'];
+for (let i = 32; i < 127; i += 1) {
+  ASCII.push(String.fromCharCode(i));
+}

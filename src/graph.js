@@ -1,7 +1,7 @@
 import Node from './node';
 import Path from './path';
 import { CharacterToken, ClassToken } from './token';
-import { flatten } from './utils';
+import { flatten, ASCII } from './utils';
 
 /**
  * A graph provides access to the branching structure of a regular expression.
@@ -12,8 +12,10 @@ export default class Graph {
   /**
    * Build a graph of tokens from a regular expression.
    * @param {RegExp} regex - The regular expression to parse.
+   * @param {RegExp} charset - The optional charset to use for regex classes.
+   *   Defaults to the set of ASCII characters.
    */
-  constructor(regex) {
+  constructor(regex, charset = ASCII) {
     this.rootNode = new Node();
     let currentNode = this.rootNode;
     const groupNodes = [currentNode];
@@ -23,7 +25,7 @@ export default class Graph {
 
         /* Groups */
         case '(':
-          currentNode = currentNode.spawn();
+          currentNode = currentNode.end().spawn();
           groupNodes.push(currentNode);
           if (regex.source[i + 1] === '?') {
             i += 1;
@@ -31,9 +33,8 @@ export default class Graph {
           }
           break;
         case ')': {
-          const nextNode = groupNodes.pop().spawn();
-          currentNode.add(nextNode);
-          currentNode = nextNode;
+          currentNode = groupNodes.pop();
+          currentNode.terminate(new Node());
           break;
         }
         case '[': {
@@ -43,7 +44,7 @@ export default class Graph {
             setEnd += 1;
           }
           const set = regex.source.substring(i, setEnd + 1);
-          currentNode = currentNode.spawn(new ClassToken(set));
+          currentNode = currentNode.end().spawn(new ClassToken(set, charset));
           i = setEnd;
           break;
         }
@@ -56,16 +57,18 @@ export default class Graph {
           const range = regex.source.substring(i + 1, rangeEnd).split(',').map(Number);
           const min = range[0];
           const max = range.length < 2 ? min : (range[1] || Infinity);
-          for (let n = 1; n < min; n += 1) currentNode = currentNode.spawn(currentNode.token);
-          if (max === Infinity) currentNode.add(currentNode);
+          const node = currentNode.clone();
+          for (let n = 1; n < min; n += 1) currentNode = currentNode.end().add(node.clone());
+          if (max === Infinity) currentNode.end().add(currentNode);
           else {
-            const minNode = currentNode;
+            const exitNodes = [currentNode.end()];
             for (let n = min; n < max; n += 1) {
-              currentNode = currentNode.spawn(currentNode.token);
-              minNode.add(currentNode);
+              currentNode = currentNode.end().add(node.clone());
+              exitNodes.push(currentNode.end());
             }
-            currentNode = currentNode.spawn();
-            minNode.add(currentNode);
+            const endNode = new Node();
+            exitNodes.forEach(node => node.add(endNode));
+            currentNode = endNode;
           }
           i = rangeEnd;
           break;
@@ -73,21 +76,22 @@ export default class Graph {
 
         /* Operators */
         case '|':
-          currentNode = groupNodes[groupNodes.length - 1];
+          currentNode = groupNodes[groupNodes.length - 1].spawn();
           break;
         case '+':
-          currentNode.add(currentNode);
+          currentNode.end().add(currentNode);
+          currentNode = currentNode.spawn();
           break;
         case '*': {
-          currentNode.add(currentNode);
           const nextNode = currentNode.parent.spawn();
-          currentNode.add(nextNode);
+          currentNode.end().add(currentNode);
+          currentNode.end().add(nextNode);
           currentNode = nextNode;
           break;
         }
         case '?': {
           const nextNode = currentNode.parent.spawn();
-          currentNode.add(nextNode);
+          currentNode.end().add(nextNode);
           currentNode = nextNode;
           break;
         }
@@ -97,10 +101,10 @@ export default class Graph {
           const captureLength = Graph.ESCAPE_LENGTH[regex.source[i + 1]];
           if (captureLength) {
             const sequence = regex.source.substring(i, i + captureLength + 1);
-            currentNode = currentNode.spawn(new ClassToken(sequence));
+            currentNode = currentNode.end().spawn(new ClassToken(sequence, charset));
             i += captureLength;
           } else {
-            currentNode = currentNode.spawn(new CharacterToken(regex.source[i + 1]));
+            currentNode = currentNode.end().spawn(new CharacterToken(regex.source[i + 1]));
             i += 1;
           }
           break;
@@ -111,9 +115,14 @@ export default class Graph {
         // parents or children (respectively).
         case '$': case '^': break;
 
+        /* Wild cards */
+        case '.':
+          currentNode = currentNode.end().spawn(new ClassToken('.', charset));
+          break;
+
         /* Text */
         default:
-          currentNode = currentNode.spawn(new CharacterToken(regex.source[i]));
+          currentNode = currentNode.end().spawn(new CharacterToken(regex.source[i]));
       }
     }
   }
@@ -127,6 +136,28 @@ export default class Graph {
     const findPaths = (paths, character) => flatten(paths.map(path => path.find(character)));
     const initialPaths = [new Path(this.rootNode, '', 0)];
     return input.split('').reduce(findPaths, initialPaths);
+  }
+
+  /**
+   * Trace a chart of the graph.
+   * @returns {String} - A visualization of the graph.
+   */
+  trace() {
+    return this.rootNode.trace();
+  }
+
+  /**
+   * Generates a random path through the graph.
+   * @returns {Path} - The path through the graph.
+   */
+  sample() {
+    let path = new Path(this.rootNode, '', 0);
+    let nextPath = path.sample();
+    while (nextPath) {
+      path = nextPath;
+      nextPath = path.sample();
+    }
+    return path;
   }
 }
 
