@@ -55,10 +55,7 @@ export default class Node {
    * @return {Node} - The node to terminate other nodes to.
    */
  terminate(node, history = {}) {
-     if (history[this.id]) {
-         this.add(node);
-         return;
-     }
+     if (history[this.id]) return;
      history[this.id] = true;
      if (this.children.length) this.children.forEach(child => child.terminate(node, history));
      else this.add(node);
@@ -76,10 +73,14 @@ end(history = {}) {
    * @param {String} character - The character to match tokens against.
    * @returns {Path[]} - The paths that the character matches.
    */
-  find(character) {
+  find(character, emptyNodes={}) {
     const paths = this.children.map((child) => {
-      // Pass through nodes with no token.
-      if (!child.token) return child.find(character);
+      if (!child.token) {
+        // Only visit empty loops once.
+        if (emptyNodes[child.id]) return null;
+        // Pass through nodes with no token.
+        return child.find(character, Object.assign({[child.id]: true}, emptyNodes));
+      }
       // If the character matches the token, use it and give it a score of one.
       if (child.token.match(character)) { return new Path(child, character, 1); }
       // If there is only one path, use it and give it a score of zero.

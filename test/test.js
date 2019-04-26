@@ -1,7 +1,5 @@
 import test from 'ava';
-import loosely from '../pkg/dist-node/index';
-
-const Mask = loosely.Mask;
+import { Mask } from '../pkg/dist-node/index';
 
 test('filtering a static string', t => {
   const mask = new Mask(/static string/);
@@ -149,16 +147,12 @@ test('filtering a phone number', t => {
   t.is(mask.filter('410-555-9876'), '(410) 555-9876');
 });
 
-// const {Mask} = require('./bin/loosely');
-// 
-// let mask = new Mask(/(Honey Nut |Frosted |)(Bunches of |Captain |)(Cheerios|Oats|Crunch|Flakes|)/);
-// console.log(mask.sample());
-// // Frosted Captain Oats
-// console.log(mask.sample());
-// // Flakes
-// console.log(mask.sample());
-// // Bunches of Cheerios
-// 
-// mask = new Mask(/1 \(\d{3}\) \d{3}-\d{4} (x\d{4,})?/);
-// console.log(mask.sample());
-// // 1 (250) 492-2953 x1495
+test('filtering a recursive group', t => {
+  const mask = new Mask(/(ab)*/);
+  t.is(mask.filter('abcdacdb'), 'abab');
+});
+
+test('filtering a recursive group with branches', t => {
+  const mask = new Mask(/(a?bc)*/);
+  t.is(mask.filter('abcdcdb'), 'abcbcb');
+});
