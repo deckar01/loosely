@@ -91,16 +91,6 @@ end(history = {}) {
     return flatten(paths).filter(path => path);
   }
 
-  trace(history = {}, level = '|   ') {
-      const id = this.token ? `${this.token.id} ${this.id}` : `<group ${this.id}>`;
-      history[this.id] = true;
-      const traces = this.children.map(child => {
-          if (history[child.id]) return `${level}|\n${level}|---<${child.id}>\n`;
-          else return child.trace(history, level + '|   ');
-      });
-      return `${level}\n${level.slice(0,-3)}---${id}\n${traces.join('')}`;
-  }
-
   /**
    * Find a random path that this node leads to.
    * @returns {Path} - The path.

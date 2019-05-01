@@ -139,14 +139,6 @@ export default class Graph {
   }
 
   /**
-   * Trace a chart of the graph.
-   * @returns {String} - A visualization of the graph.
-   */
-  trace() {
-    return this.rootNode.trace();
-  }
-
-  /**
    * Generates a random path through the graph.
    * @returns {Path} - The path through the graph.
    */
