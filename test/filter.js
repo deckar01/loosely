@@ -171,3 +171,24 @@ test('selecting the longest path', t => {
   const mask = new Mask(/a|ab|abc/);
   t.is(mask.filter('abc'), 'abc');
 });
+
+test('filtering non-matching groups', t => {
+  const mask = new Mask(/(?:abc)/);
+  t.is(mask.filter('abc'), 'abc');
+});
+
+test('capturing lookahead assertions', t => {
+  const mask = new Mask(/ab(?=c)/);
+  t.is(mask.filter('abc'), 'abc');
+});
+
+test('capturing lookbehind asserions', t => {
+  const mask = new Mask(/(?<=a)bc/);
+  t.is(mask.filter('abc'), 'abc');
+});
+
+test('ignoring negative lookahead asserions', t => {
+  // TODO: Don't match the "c".
+  const mask = new Mask(/ab(?!c)/);
+  t.is(mask.filter('abc'), 'abc');
+});

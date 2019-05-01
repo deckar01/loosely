@@ -30,6 +30,10 @@ export default class Graph {
           if (regex.source[i + 1] === '?') {
             i += 1;
             if (regex.source[i + 1] === ':') { i += 1; }
+            else if (regex.source[i + 1] === '=') { i += 1; }
+            // TODO: Handle negated assertions.
+            else if (regex.source[i + 1] === '!') { i += 1; }
+            else { i += 2; }
           }
           break;
         case ')': {
