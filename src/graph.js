@@ -75,6 +75,7 @@ export default class Graph {
             currentNode = endNode;
           }
           i = rangeEnd;
+          if (regex.source[i + 1] === '?') { i += 1; }
           break;
         }
 
@@ -85,18 +86,21 @@ export default class Graph {
         case '+':
           currentNode.end().add(currentNode);
           currentNode = currentNode.spawn();
+          if (regex.source[i + 1] === '?') { i += 1; }
           break;
         case '*': {
           const nextNode = currentNode.parent.spawn();
           currentNode.end().add(currentNode);
           currentNode.end().add(nextNode);
           currentNode = nextNode;
+          if (regex.source[i + 1] === '?') { i += 1; }
           break;
         }
         case '?': {
           const nextNode = currentNode.parent.spawn();
           currentNode.end().add(nextNode);
           currentNode = nextNode;
+          if (regex.source[i + 1] === '?') { i += 1; }
           break;
         }
 

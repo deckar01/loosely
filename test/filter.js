@@ -192,3 +192,43 @@ test('ignoring negative lookahead asserions', t => {
   const mask = new Mask(/ab(?!c)/);
   t.is(mask.filter('abc'), 'abc');
 });
+
+test('ignoring non-greedy repeats', t => {
+  const mask = new Mask(/a+?bc/);
+  t.is(mask.filter('bc'), 'abc');
+  t.is(mask.filter('abc'), 'abc');
+  t.is(mask.filter('aabc'), 'aabc');
+  t.is(mask.filter('abababc'), 'abc');
+  t.is(mask.filter('bbc'), 'abc');
+});
+
+test('ignoring non-greedy optional repeats', t => {
+  const mask = new Mask(/a*?bc/);
+  t.is(mask.filter('bc'), 'bc');
+  t.is(mask.filter('abc'), 'abc');
+  t.is(mask.filter('aabc'), 'aabc');
+  t.is(mask.filter('abababc'), 'abc');
+  t.is(mask.filter('bbc'), 'bc');
+});
+
+test('ignoring non-greedy optionals', t => {
+  const mask = new Mask(/ab??c/);
+  t.is(mask.filter(''), '');
+  t.is(mask.filter('a'), 'a');
+  t.is(mask.filter('ab'), 'ab');
+  t.is(mask.filter('abc'), 'abc');
+  t.is(mask.filter('abcd'), 'abc');
+  t.is(mask.filter('adc'), 'ac');
+  t.is(mask.filter('bc'), 'abc');
+  t.is(mask.filter('c'), 'ac');
+  t.is(mask.filter('d'), '');
+});
+
+test('ignoring non-greedy fixed repeats', t => {
+  const mask = new Mask(/a{2}?bc/);
+  t.is(mask.filter('bc'), 'aabc');
+  t.is(mask.filter('abc'), 'aabc');
+  t.is(mask.filter('aabc'), 'aabc');
+  t.is(mask.filter('abababc'), 'aabc');
+  t.is(mask.filter('bbc'), 'aabc');
+});
