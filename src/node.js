@@ -44,29 +44,29 @@ export default class Node {
    * @return {Node} - The clone.
    */
   clone() {
-      const clone = new Node(this.token, this.parent);
-      clone.children = this.children.map(child => child.clone());
-      clone.id = `${this.id}.${clone.id}`;
-      return clone;
+    const clone = new Node(this.token, this.parent);
+    clone.children = this.children.map(child => child.clone());
+    clone.id = `${this.id}.${clone.id}`;
+    return clone;
   }
 
   /**
    * Add this node to any nodes that don't have children.
    * @return {Node} - The node to terminate other nodes to.
    */
- terminate(node, history = {}) {
-     if (history[this.id]) return;
-     history[this.id] = true;
-     if (this.children.length) this.children.forEach(child => child.terminate(node, history));
-     else this.add(node);
- }
+  terminate(node, history = {}) {
+    if (history[this.id]) return;
+    history[this.id] = true;
+    if (this.children.length) this.children.forEach(child => child.terminate(node, history));
+    else this.add(node);
+  }
 
-end(history = {}) {
-   if (history[this.id]) return this;
-   history[this.id] = true;
-   if (this.children.length) return this.children[0].end(history);
-   else return this;
-}
+  end(history = {}) {
+    if (history[this.id]) return this;
+    history[this.id] = true;
+    if (this.children.length) return this.children[0].end(history);
+    else return this;
+  }
 
   /**
    * Find paths to nodes that matches the given character.
