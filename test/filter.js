@@ -1,5 +1,5 @@
 import test from 'ava';
-import { Mask } from '../pkg/dist-node/index';
+import { Mask } from '../src/index';
 
 test('filtering a static string', t => {
   const mask = new Mask(/static string/);
@@ -10,7 +10,7 @@ test('filtering a static string', t => {
 });
 
 test('filtering any character', t => {
-  const mask = new Mask(/./);
+  const mask = new Mask('^.$');
   t.is(mask.filter('a'), 'a');
   t.is(mask.filter('b'), 'b');
   t.is(mask.filter('abc'), 'a');
@@ -147,6 +147,11 @@ test('filtering a phone number', t => {
   t.is(mask.filter('410-555-9876'), '(410) 555-9876');
 });
 
+test('filtering an empty recursive group', t => {
+  const mask = new Mask(/()*/);
+  t.is(mask.filter('abc'), '');
+});
+
 test('filtering a recursive group', t => {
   const mask = new Mask(/(ab)*/);
   t.is(mask.filter('abcdacdb'), 'abab');
@@ -155,4 +160,14 @@ test('filtering a recursive group', t => {
 test('filtering a recursive group with branches', t => {
   const mask = new Mask(/(a?bc)*/);
   t.is(mask.filter('abcdcdb'), 'abcbcb');
+});
+
+test('filtering a repeated group', t => {
+  const mask = new Mask(/(ab){2}/);
+  t.is(mask.filter('abcdcdb'), 'abab');
+});
+
+test('selecting the longest path', t => {
+  const mask = new Mask(/a|ab|abc/);
+  t.is(mask.filter('abc'), 'abc');
 });

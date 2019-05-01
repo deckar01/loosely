@@ -4,7 +4,7 @@
   "description": "Text loosely based on input",
   "main": "bin/loosely.js",
   "scripts": {
-    "test": "npm run build && ava",
+    "test": "nyc --reporter=text --reporter=html ava",
     "lint": "eslint ./*.js src",
     "delint": "eslint --fix ./*.js src",
     "build": "pack build"
@@ -34,7 +34,14 @@
     "ava": "^1.2.1",
     "eslint": "^3.11.1",
     "eslint-config-airbnb-base": "^11.3.1",
-    "eslint-plugin-import": "^2.7.0"
+    "eslint-plugin-import": "^2.7.0",
+    "esm": "^3.2.22",
+    "nyc": "^14.0.0"
+  },
+  "ava": {
+    "require": [
+      "esm"
+    ]
   },
   "@pika/pack": {
     "pipeline": [
