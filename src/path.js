@@ -30,14 +30,12 @@ export default class Path {
       // Only try recursive paths once.
       paths = paths.filter(path => !history[path.node.id]);
       paths.forEach(path => history[path.node.id] = true);
-      paths = paths.map((path) => {
-        // Find the nodes that this character leads to.
-        const nextPaths = path.node.find(character)
-        .map(({ node, value, score }) => new Path(node, path.value + value, path.score + score));
-        // If the path didn't have any where to go, add the path to the results.
-        if (nextPaths.length === 0 && path.score > this.score) results.push(path);
-        return nextPaths;
-      });
+      // Find the nodes that this character leads to.
+      paths = paths.map((path) => path.node.find(character).map(
+        ({ node, value, score }) => (
+          new Path(node, path.value + value, path.score + score)
+        )
+      ));
       paths = flatten(paths);
       // If the character matched any tokens, add those paths to the results.
       results.push(...paths.filter(({ score }) => score > this.score));
