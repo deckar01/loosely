@@ -2,7 +2,6 @@
   "name": "loosely",
   "version": "0.2.0",
   "description": "Text loosely based on input",
-  "main": "bin/loosely.js",
   "scripts": {
     "test": "nyc --reporter=text --reporter=html ava",
     "lint": "eslint ./*.js src",
