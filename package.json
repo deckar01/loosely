@@ -49,9 +49,6 @@
         "@pika/plugin-standard-pkg"
       ],
       [
-        "@pika/plugin-standard-pkg"
-      ],
-      [
         "@pika/plugin-build-node"
       ],
       [
