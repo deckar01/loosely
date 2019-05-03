@@ -1,6 +1,6 @@
 {
   "name": "loosely",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Text loosely based on input",
   "main": "bin/loosely.js",
   "scripts": {
