@@ -17,8 +17,11 @@
     "input",
     "mask",
     "restrict",
+    "filter",
     "text",
-    "regex"
+    "regex",
+    "generate",
+    "sample"
   ],
   "author": "Jared Deckard <jared.deckard@gmail.com>",
   "license": "MIT",

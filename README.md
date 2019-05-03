@@ -2,6 +2,8 @@
 
 Text loosely based on input
 
+![loosely-watch](https://user-images.githubusercontent.com/3108007/57148023-66439700-6d8e-11e9-964c-0862a8a0ad2a.gif)
+
 ## Install
 
 ```sh
@@ -14,6 +16,11 @@ npm install --save loosely
 const { Mask } = require('loosely');
 
 const mask = new Mask(/\d \(\d{3}\) \d{3}-\d{4}/);
+
+const input = document.querySelector('#phone');
+
+mask.watch(input);
+// Filters the input value after every input event.
 
 const text = mask.filter('1-800-555-1234');
 // 1 (800) 555-1234

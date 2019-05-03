@@ -36,6 +36,16 @@ export default class Mask {
   }
 
   /**
+   * Monitor changes to the element value and apply the mask.
+   * @param {Element} element - The element to monitor.
+   */
+  watch(element) {
+    document.addEventListener('input', () => {
+      element.value = this.filter(element.value);
+    });
+  }
+
+  /**
    * Generate text that satisfies the mask.
    * @returns {String} - The text.
    */
