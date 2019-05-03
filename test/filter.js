@@ -232,3 +232,8 @@ test('ignoring non-greedy fixed repeats', t => {
   t.is(mask.filter('abababc'), 'aabc');
   t.is(mask.filter('bbc'), 'aabc');
 });
+
+test('selecting the shortest path', t => {
+  const mask = new Mask(/ab(ggg|gg|g)c/);
+  t.is(mask.filter('abc'), 'abgc');
+});
