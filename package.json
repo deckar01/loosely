@@ -29,9 +29,9 @@
   },
   "homepage": "https://github.com/deckar01/loosely#readme",
   "devDependencies": {
-    "@pika/pack": "^0.3.1",
-    "@pika/plugin-build-node": "^0.3.9",
-    "@pika/plugin-build-web": "^0.3.9",
+    "@pika/pack": "^0.3.7",
+    "@pika/plugin-build-node": "^0.3.16",
+    "@pika/plugin-build-web": "^0.3.16",
     "@pika/plugin-standard-pkg": "^0.3.9",
     "ava": "^1.2.1",
     "eslint": "^3.11.1",
