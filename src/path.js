@@ -29,12 +29,14 @@ export default class Path {
     while (paths.length) {
       // Only try recursive paths once.
       paths = paths.filter(path => !history[path.node.id]);
-      paths.forEach(path => history[path.node.id] = true);
+      paths.forEach((path) => {
+        history[path.node.id] = true;
+      });
       // Find the nodes that this character leads to.
-      paths = paths.map((path) => path.node.find(character).map(
+      paths = paths.map(path => path.node.find(character).map(
         ({ node, value, score }) => (
           new Path(node, path.value + value, path.score + score)
-        )
+        ),
       ));
       paths = flatten(paths);
       // If the character matched any tokens, add those paths to the results.

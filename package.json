@@ -57,8 +57,5 @@
         "@pika/plugin-build-web"
       ]
     ]
-  },
-  "dependencies": {
-    "yarn": "^1.13.0"
   }
 }

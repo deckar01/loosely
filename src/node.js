@@ -1,8 +1,6 @@
 import Path from './path';
 import { flatten, sample } from './utils';
 
-let COUNTER = 0;
-
 /**
  * A node of tokens in a graph. Tokens represent a single characters or
  * character classes.
@@ -14,7 +12,8 @@ export default class Node {
    * @param {Node} parent - The parent node of this node.
    */
   constructor(token, parent) {
-    this.id = COUNTER++;
+    this.id = Node.counter;
+    Node.counter += 1;
     this.token = token;
     this.parent = parent;
     this.children = [];
@@ -46,7 +45,6 @@ export default class Node {
   clone() {
     const clone = new Node(this.token, this.parent);
     clone.children = this.children.map(child => child.clone());
-    clone.id = `${this.id}.${clone.id}`;
     return clone;
   }
 
@@ -56,16 +54,16 @@ export default class Node {
    */
   terminate(node, history = {}) {
     if (history[this.id]) return;
-    history[this.id] = true;
+    Object.assign(history, { [this.id]: true });
     if (this.children.length) this.children.forEach(child => child.terminate(node, history));
     else this.add(node);
   }
 
   end(history = {}) {
     if (history[this.id]) return this;
-    history[this.id] = true;
+    Object.assign(history, { [this.id]: true });
     if (this.children.length) return this.children[0].end(history);
-    else return this;
+    return this;
   }
 
   /**
@@ -73,13 +71,13 @@ export default class Node {
    * @param {String} character - The character to match tokens against.
    * @returns {Path[]} - The paths that the character matches.
    */
-  find(character, emptyNodes={}) {
+  find(character, emptyNodes = {}) {
     const paths = this.children.map((child) => {
       if (!child.token) {
         // Only visit empty loops once.
         if (emptyNodes[child.id]) return null;
         // Pass through nodes with no token.
-        return child.find(character, Object.assign({[child.id]: true}, emptyNodes));
+        return child.find(character, Object.assign({ [child.id]: true }, emptyNodes));
       }
       // If the character matches the token, use it and give it a score of one.
       if (child.token.match(character)) { return new Path(child, character, 1); }
@@ -106,3 +104,5 @@ export default class Node {
     return sample(paths);
   }
 }
+
+Node.counter = 0;

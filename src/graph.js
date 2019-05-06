@@ -29,11 +29,16 @@ export default class Graph {
           groupNodes.push(currentNode);
           if (regex.source[i + 1] === '?') {
             i += 1;
-            if (regex.source[i + 1] === ':') { i += 1; }
-            else if (regex.source[i + 1] === '=') { i += 1; }
-            // TODO: Handle negated assertions.
-            else if (regex.source[i + 1] === '!') { i += 1; }
-            else { i += 2; }
+            if (regex.source[i + 1] === ':') {
+              i += 1;
+            } else if (regex.source[i + 1] === '=') {
+              i += 1;
+            } else if (regex.source[i + 1] === '!') {
+              // TODO: Handle negated assertions.
+              i += 1;
+            } else {
+              i += 2;
+            }
           }
           break;
         case ')': {
@@ -71,7 +76,7 @@ export default class Graph {
               exitNodes.push(currentNode.end());
             }
             const endNode = new Node();
-            exitNodes.forEach(node => node.add(endNode));
+            exitNodes.forEach(exitNode => exitNode.add(endNode));
             currentNode = endNode;
           }
           i = rangeEnd;

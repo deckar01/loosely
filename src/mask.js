@@ -41,7 +41,7 @@ export default class Mask {
    */
   watch(element) {
     document.addEventListener('input', () => {
-      element.value = this.filter(element.value);
+      Object.assign(element, { value: this.filter(element.value) });
     });
   }
 
