@@ -1,6 +1,6 @@
 {
   "name": "loosely",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "Text loosely based on input",
   "scripts": {
     "test": "nyc --reporter=text --reporter=html ava",
