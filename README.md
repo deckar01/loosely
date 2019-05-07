@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/deckar01/loosely.svg?branch=master)](https://travis-ci.com/deckar01/loosely)
+
 # Loosely🌱
 
 Text loosely based on input
