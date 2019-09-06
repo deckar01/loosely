@@ -2,7 +2,7 @@
 
 # Loosely🌱
 
-Text loosely based on input
+Smart input masks for regexes
 
 ![loosely-watch](https://user-images.githubusercontent.com/3108007/57148023-66439700-6d8e-11e9-964c-0862a8a0ad2a.gif)
 
@@ -14,13 +14,15 @@ showing them error messages.
 
 ## How?
 
-Loosely parses the regex into a graph. Each node in the graph has a set of
+Loosely parses a regex into a graph. Each node in the graph has a set of
 characters that it accepts. Each time the user types a character, the graph is
 searched to see if the text represents a path through the graph. If a node only
 accepts one character, the search is allowed to insert that character into the
-path. The result is that required parts of the mask are automatically inserted,
-and alternate variations are silently coaxed into the desired format while the
-user is typing.
+input. This allows required parts of the mask to be inserted automatically while 
+the user is typing. If no nodes accept a character, the search is allowed to remove
+it from the input. This allows a user's personal formatting preferences to be
+gracefully ignored. The result is a robust input experience that adapts to the
+data as it changes.
 
 ## Install
 
