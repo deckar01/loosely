@@ -4,7 +4,11 @@
 
 Smart input masks for regexes
 
-![loosely-watch](https://user-images.githubusercontent.com/3108007/57148023-66439700-6d8e-11e9-964c-0862a8a0ad2a.gif)
+[![loosely-watch](https://user-images.githubusercontent.com/3108007/57148023-66439700-6d8e-11e9-964c-0862a8a0ad2a.gif)](https://wnf4l.csb.app/)
+
+## Demo
+
+[Try it out!](https://wnf4l.csb.app/) (powered by [codesandbox.io](https://codesandbox.io/s/loosely-sandbox-wnf4l))
 
 ## Why?
 
