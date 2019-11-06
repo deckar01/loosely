@@ -6,12 +6,12 @@ test('sample a static string', t => {
   t.is(mask.sample(), 'static string');
 });
 
-test('filtering any character', t => {
+test('sampling any character', t => {
   const mask = new Mask(/./);
   t.is(mask.sample().length, 1);
 });
 
-test('filtering a static group', t => {
+test('sampling a static group', t => {
   const mask = new Mask(/(a group)/);
   t.is(mask.sample(), 'a group');
 });
