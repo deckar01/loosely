@@ -36,3 +36,7 @@ export const ASCII = ['\t', '\n'];
 for (let i = 32; i < 127; i += 1) {
   ASCII.push(String.fromCharCode(i));
 }
+
+export function reverse(string) {
+  return string.split('').reverse().join('');
+}

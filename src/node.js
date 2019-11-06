@@ -66,6 +66,14 @@ export default class Node {
     return this;
   }
 
+  list(history = {}) {
+    if (history[this.id]) return [];
+    Object.assign(history, { [this.id]: true });
+    const nodes = [this];
+    this.children.forEach(child => nodes.push(...child.list(history)));
+    return nodes;
+  }
+
   /**
    * Find paths to nodes that matches the given character.
    * @param {String} character - The character to match tokens against.

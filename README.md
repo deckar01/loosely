@@ -73,6 +73,19 @@ mask.sample()
 // 8 (693) 906-1454
 ```
 
+### Reverse Mask
+
+Filter a regular expression from right to left.
+
+```js
+const { ReverseMask } = require('loosely');
+
+const mask = new ReverseMask(/(\d{1,3},)*\d{1,3}/);
+
+const text = mask.filter('12345');
+// 12,345
+```
+
 ## TODO
 
 ### Assertions

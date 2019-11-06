@@ -1,5 +1,5 @@
 import test from 'ava';
-import { Mask } from '../src/index';
+import { Mask, ReverseMask } from '../src/index';
 
 test('filtering a static string', t => {
   const mask = new Mask(/static string/);
@@ -236,4 +236,13 @@ test('ignoring non-greedy fixed repeats', t => {
 test('selecting the shortest path', t => {
   const mask = new Mask(/ab(ggg|gg|g)c/);
   t.is(mask.filter('abc'), 'abgc');
+});
+
+test('filtering in reverse', t => {
+  const mask = new ReverseMask(/(\d{1,3},)*\d{3}|\d{1,3}/);
+  t.is(mask.filter('1'), '1');
+  t.is(mask.filter('12'), '12');
+  t.is(mask.filter('123'), '123');
+  t.is(mask.filter('1234'), '1,234');
+  t.is(mask.filter('12345'), '12,345');
 });

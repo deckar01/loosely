@@ -164,6 +164,20 @@ export default class Graph {
     }
     return path;
   }
+
+  reverse() {
+    const reverseRoot = new Node();
+    this.rootNode.terminate(reverseRoot);
+    const nodes = this.rootNode.list();
+    const clones = {};
+    nodes.forEach(node => { clones[node.id] = new Node(node.token); });
+    nodes.forEach(node => {
+      node.children.forEach(child => {
+        clones[child.id].add(clones[node.id]);
+      });
+    });
+    this.rootNode = clones[reverseRoot.id];
+  }
 }
 
 // The number of characters that should get consumed by each escape sequence.
