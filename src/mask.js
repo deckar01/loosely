@@ -40,7 +40,7 @@ export default class Mask {
    * @param {Element} element - The element to monitor.
    */
   watch(element) {
-    document.addEventListener('input', () => {
+    element.addEventListener('input', () => {
       Object.assign(element, { value: this.filter(element.value) });
     });
   }
