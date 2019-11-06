@@ -6,7 +6,8 @@
     "test": "nyc --reporter=text --reporter=html ava",
     "lint": "eslint ./*.js src",
     "delint": "eslint --fix ./*.js src",
-    "build": "pack build"
+    "build": "pack build",
+    "time": "node -r esm benchmark"
   },
   "repository": {
     "type": "git",
@@ -39,6 +40,7 @@
     "eslint-config-airbnb-base": "^11.3.1",
     "eslint-plugin-import": "^2.7.0",
     "esm": "^3.2.22",
+    "micro-benchmark": "^1.3.22",
     "nyc": "^14.0.0"
   },
   "ava": {
