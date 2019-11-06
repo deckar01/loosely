@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 export default class Debug {
   static trace(mask) {
     Debug.traceNode(mask.graph.rootNode);
