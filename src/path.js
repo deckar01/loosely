@@ -1,5 +1,3 @@
-import { flatten } from './utils';
-
 /**
  * A path contains a node and the input that lead to it.
  */
@@ -19,10 +17,10 @@ export default class Path {
   /**
    * Find the paths that the given character leads to.
    * @param {String} character - The character to match tokens against.
-   * @returns {Path[]} - The paths that the character matches.
+   * @param {Path[]} results - The paths that the character matches.
    */
-  find(character) {
-    const results = [];
+  find(character, results) {
+    const size = results.length;
     let paths = [this];
     const history = {};
     // Search until thre are no more paths left.
@@ -33,18 +31,21 @@ export default class Path {
         history[path.node.id] = true;
       });
       // Find the nodes that this character leads to.
-      paths = paths.map(path => path.node.find(character).map(
-        ({ node, value, score }) => (
-          new Path(node, path.value + value, path.score + score)
-        ),
-      ));
-      paths = flatten(paths);
-      // If the character matched any tokens, add those paths to the results.
-      results.push(...paths.filter(({ score }) => score > this.score));
-      // If alternate characters were found, continue searching those paths.
-      paths = paths.filter(({ score }) => score === this.score);
+      const alternatePaths = [];
+      paths.forEach(path => {
+        const nextPaths = [];
+        path.node.find(character, nextPaths);
+        nextPaths.forEach(({ node, value, score }) => {
+          const newPath = new Path(node, path.value + value, path.score + score);
+          // If alternate characters were found, continue searching those paths.
+          if (score === 0) { alternatePaths.push(newPath); }
+          // If the character matched any tokens, add those paths to the results.
+          else { results.push(newPath); }
+        });
+      });
+      paths = alternatePaths;
     }
-    return results.length ? results : [this];
+    if(results.length === size) { results.push(this); }
   }
 
   /**

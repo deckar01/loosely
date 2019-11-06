@@ -9,13 +9,6 @@ export function max(set, compare) {
 }
 
 /**
- * Flattens a set of sets into a set.
- * @param {Any[][]} sets - A set of sets.
- * @returns {Any[]} - A flattened set.
- */
-export function flatten(sets) { return [].concat(...sets); }
-
-/**
  * Builds a regular expression that enforces full text matching.
  * @param {String|RegExp} mask - The regular expression source.
  * @returns {RegExp} - The full text regular expression.

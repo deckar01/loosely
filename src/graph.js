@@ -1,7 +1,7 @@
 import Node from './node';
 import Path from './path';
 import { CharacterToken, ClassToken } from './token';
-import { flatten, ASCII } from './utils';
+import { ASCII } from './utils';
 
 /**
  * A graph provides access to the branching structure of a regular expression.
@@ -146,9 +146,13 @@ export default class Graph {
    * @returns {Path[]} - A set of paths through the graph.
    */
   find(input) {
-    const findPaths = (paths, character) => flatten(paths.map(path => path.find(character)));
-    const initialPaths = [new Path(this.rootNode, '', 0)];
-    return input.split('').reduce(findPaths, initialPaths);
+    let paths = [new Path(this.rootNode, '', 0)];
+    input.split('').forEach(character => {
+      const nextPaths = [];
+      paths.forEach(path => path.find(character, nextPaths));
+      paths = nextPaths;
+    });
+    return paths;
   }
 
   /**

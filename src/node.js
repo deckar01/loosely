@@ -1,5 +1,5 @@
 import Path from './path';
-import { flatten, sample } from './utils';
+import { sample } from './utils';
 
 /**
  * A node of tokens in a graph. Tokens represent a single characters or
@@ -79,22 +79,20 @@ export default class Node {
    * @param {String} character - The character to match tokens against.
    * @returns {Path[]} - The paths that the character matches.
    */
-  find(character, emptyNodes = {}) {
-    const paths = this.children.map((child) => {
+  find(character, results, emptyNodes = {}) {
+    this.children.forEach((child) => {
       if (!child.token) {
         // Only visit empty loops once.
         if (emptyNodes[child.id]) return null;
         // Pass through nodes with no token.
-        return child.find(character, Object.assign({ [child.id]: true }, emptyNodes));
+        return child.find(character, results, Object.assign({ [child.id]: true }, emptyNodes));
       }
       // If the character matches the token, use it and give it a score of one.
-      if (child.token.match(character)) { return new Path(child, character, 1); }
+      if (child.token.match(character)) { return results.push(new Path(child, character, 1)); }
       // If there is only one path, use it and give it a score of zero.
       const onlyOnePath = (child.token.choices === 1);
-      if (onlyOnePath) { return new Path(child, child.token.value, 0); }
-      return null;
+      if (onlyOnePath) { return results.push(new Path(child, child.token.value, 0)); }
     });
-    return flatten(paths).filter(path => path);
   }
 
   /**
