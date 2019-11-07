@@ -2,7 +2,7 @@
 
 export default class Debug {
   static trace(mask) {
-    Debug.traceNode(mask.graph.rootNode);
+    return Debug.traceNode(mask.graph.rootNode);
   }
 
   static traceNode(node, history = {}, level = '|   ') {
