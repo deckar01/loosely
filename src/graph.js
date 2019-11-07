@@ -1,7 +1,7 @@
 import Node from './node';
 import Path from './path';
 import { CharacterToken, ClassToken } from './token';
-import { ASCII } from './utils';
+import { ASCII, max } from './utils';
 
 /**
  * A graph provides access to the branching structure of a regular expression.
@@ -150,7 +150,8 @@ export default class Graph {
     input.split('').forEach(character => {
       const nextPaths = [];
       paths.forEach(path => path.find(character, nextPaths));
-      paths = nextPaths;
+      const bestPath = max(nextPaths, Path.compare);
+      paths = nextPaths.filter(path => Path.compare(path, bestPath) === 0);
     });
     return paths;
   }

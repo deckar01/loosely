@@ -1,6 +1,5 @@
 import Graph from './graph';
-import Path from './path';
-import { maskToRegex, max } from './utils';
+import { maskToRegex } from './utils';
 
 /**
  * A convenience wrapper around the graph class.
@@ -31,8 +30,7 @@ export default class Mask {
    */
   filter(input) {
     const paths = this.graph.find(input);
-    const bestPath = max(paths, Path.compare);
-    return bestPath.value;
+    return paths[0].value;
   }
 
   /**
